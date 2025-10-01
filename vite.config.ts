@@ -4,9 +4,8 @@ import { defineConfig } from "vite";
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  server: {
-    port: 3000,
-  },
+  base: "/MangaVerse/",
+
   css: {
     postcss: "./postcss.config.js",
   },
