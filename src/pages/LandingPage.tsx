@@ -330,7 +330,7 @@ const LandingPage: React.FC = () => {
   );
   const [paddleInstance, setPaddleInstance] = useState<Paddle | undefined>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [language, setLanguage] = useState<Language>("en");
+  const [language] = useState<Language>("en");
 
   useEffect(() => {
     const handleScroll = (): void => {
@@ -357,10 +357,6 @@ const LandingPage: React.FC = () => {
 
     initialize();
   }, []);
-
-  const toggleLanguage = () => {
-    setLanguage((prev) => (prev === "en" ? "ar" : "en"));
-  };
 
   const isRTL = language === "ar";
 
