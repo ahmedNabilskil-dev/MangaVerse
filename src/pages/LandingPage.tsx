@@ -53,12 +53,6 @@ interface Feature {
   description: string;
 }
 
-interface Stats {
-  value: string;
-  label: string;
-  color: string;
-}
-
 type Language = "en" | "ar";
 
 // Translation content
@@ -418,8 +412,6 @@ const LandingPage: React.FC = () => {
       description: t.features.geminiIntegrationDesc,
     },
   ];
-
-  const stats: Stats[] = [];
 
   const testimonials: Testimonial[] = [];
 
