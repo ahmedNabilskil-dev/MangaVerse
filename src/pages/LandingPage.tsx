@@ -3,9 +3,7 @@ import {
   Apple,
   ArrowRight,
   Book,
-  Bot,
   Check,
-  ChevronRight,
   Database,
   Download,
   Facebook,
@@ -27,6 +25,7 @@ import {
   Zap,
 } from "lucide-react";
 import React, { useCallback, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 interface PricingPlan {
   name: string;
@@ -120,26 +119,24 @@ const translations = {
       apiKeyDesc: "Use your own Gemini API key - full control and transparency",
     },
     pricing: {
-      title: "Simple Pricing",
+      title: "One App, Simple Pricing",
       description:
-        "Start free, upgrade when you're ready to unlock unlimited creativity",
+        "Download the app once, use your own Gemini API key, and create unlimited manga",
       monthly: "Monthly",
       yearly: "Yearly",
       lifetime: "Lifetime",
-      save: "Save 20%",
-      bestDeal: "Best Deal",
+      save: "Save 40%",
+      bestDeal: "Best Value",
       guarantee: "30-day money-back guarantee",
       cancel: "Cancel anytime",
       noFees: "No hidden fees",
-      freeTrial: "Free Trial",
-      freeTrialDesc: "Perfect for trying out MangaAI's capabilities",
-      creator: "Creator",
-      creatorDesc: "For serious manga creators and storytellers",
-      studio: "Studio",
-      studioDesc: "For teams and professional studios",
-      creatorLifetime: "Creator Lifetime",
-      creatorLifetimeDesc:
-        "One-time payment, lifetime access to Creator features",
+      trial: "7-day free trial", // ADD THIS LINE
+      monthlyLicense: "Monthly License",
+      monthlyDesc: "Flexible month-to-month access",
+      yearlyLicense: "Yearly License",
+      yearlyDesc: "Best value for committed creators",
+      lifetimeLicense: "Lifetime License",
+      lifetimeDesc: "Pay once, use forever",
     },
     testimonials: {
       title: "Loved by Creators",
@@ -180,7 +177,7 @@ const translations = {
         "Join thousands of creators who are already building amazing stories with MangaAI's revolutionary chat-based interface.",
       download: "Download Free Trial",
       viewPricing: "View Pricing Plans",
-      freeTrial: "Free 14-day trial",
+      freeTrial: "Free 7-day trial",
       noCard: "No credit card required",
       cancelAnytime: "Cancel anytime",
     },
@@ -249,25 +246,24 @@ const translations = {
       apiKeyDesc: "استخدم مفتاح Gemini API الخاص بك - تحكم كامل وشفافية",
     },
     pricing: {
-      title: "أسعار بسيطة",
+      title: "تطبيق واحد، سعر بسيط",
       description:
-        "ابدأ مجاناً، وقم بالترقية عندما تكون جاهزاً لفتح الإبداع غير المحدود",
+        "حمّل التطبيق مرة واحدة، استخدم مفتاح Gemini API الخاص بك، وأنشئ مانجا غير محدودة",
       monthly: "شهري",
       yearly: "سنوي",
       lifetime: "مدى الحياة",
-      save: "وفر 20%",
-      bestDeal: "أفضل عرض",
+      save: "وفر 40%",
+      bestDeal: "أفضل قيمة",
       guarantee: "ضمان استرداد الأموال لمدة 30 يوم",
       cancel: "ألغ في أي وقت",
       noFees: "لا توجد رسوم خفية",
-      freeTrial: "تجربة مجانية",
-      freeTrialDesc: "مثالي لتجربة قدرات MangaAI",
-      creator: "المبدع",
-      creatorDesc: "لمبدعي المانغا الجادين ورواة القصص",
-      studio: "الاستوديو",
-      studioDesc: "للفرق والاستوديوهات المحترفة",
-      creatorLifetime: "المبدع مدى الحياة",
-      creatorLifetimeDesc: "دفعة لمرة واحدة، وصول مدى الحياة لميزات المبدع",
+      trial: "تجربة مجانية 7 أيام", // ADD THIS LINE
+      monthlyLicense: "ترخيص شهري",
+      monthlyDesc: "وصول مرن شهر بشهر",
+      yearlyLicense: "ترخيص سنوي",
+      yearlyDesc: "أفضل قيمة للمبدعين الملتزمين",
+      lifetimeLicense: "ترخيص مدى الحياة",
+      lifetimeDesc: "ادفع مرة واحدة، استخدم للأبد",
     },
     testimonials: {
       title: "محبوب من المبدعين",
@@ -308,7 +304,7 @@ const translations = {
         "انضم إلى آلاف المبدعين الذين يبنون بالفعل قصصاً مذهلة باستخدام واجهة الدردشة الثورية لـ MangaAI.",
       download: "حمّل النسخة التجريبية المجانية",
       viewPricing: "عرض خطط الأسعار",
-      freeTrial: "تجربة مجانية 14 يوم",
+      freeTrial: "تجربة مجانية 7 يوم",
       noCard: "لا حاجة لبطاقة ائتمان",
       cancelAnytime: "ألغ في أي وقت",
     },
@@ -423,228 +419,155 @@ const LandingPage: React.FC = () => {
     },
   ];
 
-  const stats: Stats[] = [
-    {
-      value: "50K+",
-      label:
-        language === "en" ? "Manga Panels Created" : "لوحات مانغا تم إنشاؤها",
-      color: "text-purple-400",
-    },
-    {
-      value: "15K+",
-      label: language === "en" ? "Active Creators" : "مبدعين نشطين",
-      color: "text-pink-400",
-    },
-    {
-      value: "500+",
-      label: language === "en" ? "Completed Stories" : "قصة مكتملة",
-      color: "text-blue-400",
-    },
-    {
-      value: "4.9/5",
-      label: language === "en" ? "Creator Rating" : "تقييم المبدعين",
-      color: "text-green-400",
-    },
-  ];
+  const stats: Stats[] = [];
 
-  const testimonials: Testimonial[] = [
-    {
-      name: language === "en" ? "Yuki Tanaka" : "يوكي تاناكا",
-      role: language === "en" ? "Indie Manga Creator" : "مبدع مانغا مستقل",
-      avatar:
-        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face",
-      content:
-        language === "en"
-          ? "MangaAI completely transformed my workflow. I can now create full chapters in days instead of months. The character consistency is incredible!"
-          : "MangaAI غيرت تماماً طريقة عملي. يمكنني الآن إنشاء فصول كاملة في أيام بدلاً من أشهر. اتساق الشخصيات لا يصدق!",
-      rating: 5,
-    },
-    {
-      name: language === "en" ? "Sofia Rodriguez" : "صوفيا رودريغيز",
-      role: language === "en" ? "Webtoon Artist" : "فنان ويب تون",
-      avatar:
-        "https://images.unsplash.com/photo-1494790108755-2616b612b1e5?w=100&h=100&fit=crop&crop=face",
-      content:
-        language === "en"
-          ? "The chat-based interface is genius! I just describe my scenes and the AI creates exactly what I envision. It's like having a whole art team."
-          : "واجهة الدردشة عبقرية! أنا فقط أصف مشاهد وي والذكاء الاصطناعي ينشئ بالضبط ما أتخيله. يشبه وجود فريق فني كامل.",
-      rating: 5,
-    },
-    {
-      name: language === "en" ? "Alex Chen" : "أليكس تشين",
-      role: language === "en" ? "Digital Storyteller" : "راوي قصص رقمي",
-      avatar:
-        "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face",
-      content:
-        language === "en"
-          ? "Finally, a tool that understands storytelling! The panel generation with speech bubbles saves me hours of work. Absolutely game-changing!"
-          : "أخيراً، أداة تفهم سرد القصص! إنشاء اللوحات مع فقاعات الكلام يوفر لي ساعات من العمل. تغيير قواعد اللعبة تماماً!",
-      rating: 5,
-    },
-  ];
+  const testimonials: Testimonial[] = [];
 
   const pricingPlans: Record<"monthly" | "yearly" | "lifetime", PricingPlan[]> =
     {
       monthly: [
         {
-          name: t.pricing.freeTrial,
-          price: "0",
-          period: language === "en" ? "14 days" : "14 يوم",
-          description: t.pricing.freeTrialDesc,
-          features: [
+          name: language === "en" ? "Monthly License" : "ترخيص شهري",
+          price: "5",
+          period: language === "en" ? "month" : "شهر",
+          description:
             language === "en"
-              ? "100 AI generations"
-              : "100 عملية إنشاء بالذكاء الاصطناعي",
-            language === "en" ? "5 characters" : "5 شخصيات",
-            language === "en" ? "Basic panel layouts" : "تخطيطات لوحات أساسية",
-            language === "en" ? "Community support" : "دعم المجتمع",
+              ? "Flexible month-to-month access"
+              : "وصول مرن شهر بشهر",
+          features: [
+            language === "en" ? "7-day free trial" : "تجربة مجانية 7 أيام", // ADD AS FIRST FEATURE
+            language === "en"
+              ? "Full desktop application access"
+              : "وصول كامل لتطبيق سطح المكتب",
+            language === "en"
+              ? "AI-powered manga creation tools"
+              : "أدوات إنشاء المانجا بالذكاء الاصطناعي",
+            language === "en"
+              ? "Create chapters, scenes & panels"
+              : "إنشاء فصول ومشاهد ولوحات",
+            language === "en"
+              ? "Generate characters & outfits"
+              : "إنشاء شخصيات وملابس",
+            language === "en"
+              ? "Build locations & backgrounds"
+              : "بناء مواقع وخلفيات",
+            language === "en"
+              ? "Webtoon-style layouts"
+              : "تخطيطات بنمط الويبتون",
+            language === "en" ? "Speech bubble dialogs" : "فقاعات حوار",
             language === "en" ? "Local SQLite storage" : "تخزين SQLite محلي",
+            language === "en"
+              ? "Works with your Gemini API key"
+              : "يعمل مع مفتاح Gemini API الخاص بك",
+            language === "en" ? "Cancel anytime" : "إلغاء في أي وقت",
           ],
-          cta: language === "en" ? "Start Free Trial" : "ابدأ التجربة المجانية",
+          cta:
+            language === "en"
+              ? "Get Monthly License"
+              : "احصل على الترخيص الشهري",
           popular: false,
-          paddlePriceId: "pri_01k65kfvna4cjae8a62n1gh7g3",
-        },
-        {
-          name: t.pricing.creator,
-          price: "29",
-          period: language === "en" ? "month" : "شهر",
-          description: t.pricing.creatorDesc,
-          features: [
-            language === "en"
-              ? "Unlimited AI generations"
-              : "عمليات إنشاء غير محدودة بالذكاء الاصطناعي",
-            language === "en" ? "Unlimited characters" : "شخصيات غير محدودة",
-            language === "en"
-              ? "Advanced panel layouts"
-              : "تخطيطات لوحات متقدمة",
-            language === "en" ? "Custom speech bubbles" : "فقاعات كلام مخصصة",
-            language === "en" ? "Chapter management" : "إدارة الفصول",
-            language === "en" ? "Priority support" : "دعم مميز",
-            language === "en" ? "Commercial license" : "ترخيص تجاري",
-          ],
-          cta: language === "en" ? "Get Creator" : "احصل على المبدع",
-          popular: true,
-          paddlePriceId: "pri_01k65kfvna4cjae8a62n1gh7g3",
-        },
-        {
-          name: t.pricing.studio,
-          price: "79",
-          period: language === "en" ? "month" : "شهر",
-          description: t.pricing.studioDesc,
-          features: [
-            language === "en" ? "Everything in Creator" : "كل شيء في المبدع",
-            language === "en" ? "Team collaboration" : "تعاون الفريق",
-            language === "en" ? "Advanced story tools" : "أدوات قصة متقدمة",
-            language === "en" ? "Bulk operations" : "عمليات مجمعة",
-            language === "en" ? "Custom integrations" : "تكاملات مخصصة",
-            language === "en" ? "Dedicated support" : "دعم مخصص",
-            language === "en"
-              ? "White-label options"
-              : "خيارات بدون علامة تجارية",
-          ],
-          cta: language === "en" ? "Get Studio" : "احصل على الاستوديو",
-          popular: false,
-          paddlePriceId: "pri_01k65kfvna4cjae8a62n1gh7g3",
+          paddlePriceId: "pri_01k65kfvna4cjae8a62n1gh7g3", // Replace with your actual monthly price ID
         },
       ],
       yearly: [
         {
-          name: t.pricing.freeTrial,
-          price: "0",
-          period: language === "en" ? "14 days" : "14 يوم",
-          description: t.pricing.freeTrialDesc,
-          features: [
+          name: language === "en" ? "Yearly License" : "ترخيص سنوي",
+          price: "36",
+          period: language === "en" ? "year" : "سنة",
+          originalPrice: "60",
+          description:
             language === "en"
-              ? "100 AI generations"
-              : "100 عملية إنشاء بالذكاء الاصطناعي",
-            language === "en" ? "5 characters" : "5 شخصيات",
-            language === "en" ? "Basic panel layouts" : "تخطيطات لوحات أساسية",
-            language === "en" ? "Community support" : "دعم المجتمع",
+              ? "Best value for serious creators"
+              : "أفضل قيمة للمبدعين الجادين",
+          features: [
+            language === "en" ? "7-day free trial" : "تجربة مجانية 7 أيام", // ADD AS FIRST FEATURE
+            language === "en"
+              ? "Full desktop application access"
+              : "وصول كامل لتطبيق سطح المكتب",
+            language === "en"
+              ? "AI-powered manga creation tools"
+              : "أدوات إنشاء المانجا بالذكاء الاصطناعي",
+            language === "en"
+              ? "Create chapters, scenes & panels"
+              : "إنشاء فصول ومشاهد ولوحات",
+            language === "en"
+              ? "Generate characters & outfits"
+              : "إنشاء شخصيات وملابس",
+            language === "en"
+              ? "Build locations & backgrounds"
+              : "بناء مواقع وخلفيات",
+            language === "en"
+              ? "Webtoon-style layouts"
+              : "تخطيطات بنمط الويبتون",
+            language === "en" ? "Speech bubble dialogs" : "فقاعات حوار",
             language === "en" ? "Local SQLite storage" : "تخزين SQLite محلي",
+            language === "en"
+              ? "Works with your Gemini API key"
+              : "يعمل مع مفتاح Gemini API الخاص بك",
+            language === "en" ? "Save $24 per year" : "وفر 24$ سنوياً",
           ],
-          cta: language === "en" ? "Start Free Trial" : "ابدأ التجربة المجانية",
+          cta:
+            language === "en"
+              ? "Get Yearly License"
+              : "احصل على الترخيص السنوي",
           popular: false,
-          paddlePriceId: "pri_01k65kfvna4cjae8a62n1gh7g3",
-        },
-        {
-          name: t.pricing.creator,
-          price: "290",
-          period: language === "en" ? "year" : "سنة",
-          originalPrice: "348",
-          description: t.pricing.creatorDesc,
-          features: [
-            language === "en"
-              ? "Unlimited AI generations"
-              : "عمليات إنشاء غير محدودة بالذكاء الاصطناعي",
-            language === "en" ? "Unlimited characters" : "شخصيات غير محدودة",
-            language === "en"
-              ? "Advanced panel layouts"
-              : "تخطيطات لوحات متقدمة",
-            language === "en" ? "Custom speech bubbles" : "فقاعات كلام مخصصة",
-            language === "en" ? "Chapter management" : "إدارة الفصول",
-            language === "en" ? "Priority support" : "دعم مميز",
-            language === "en" ? "Commercial license" : "ترخيص تجاري",
-          ],
-          cta: language === "en" ? "Get Creator" : "احصل على المبدع",
-          popular: true,
-          paddlePriceId: "pri_01k65kfvna4cjae8a62n1gh7g3",
-        },
-        {
-          name: t.pricing.studio,
-          price: "790",
-          period: language === "en" ? "year" : "سنة",
-          originalPrice: "948",
-          description: t.pricing.studioDesc,
-          features: [
-            language === "en" ? "Everything in Creator" : "كل شيء في المبدع",
-            language === "en" ? "Team collaboration" : "تعاون الفريق",
-            language === "en" ? "Advanced story tools" : "أدوات قصة متقدمة",
-            language === "en" ? "Bulk operations" : "عمليات مجمعة",
-            language === "en" ? "Custom integrations" : "تكاملات مخصصة",
-            language === "en" ? "Dedicated support" : "دعم مخصص",
-            language === "en"
-              ? "White-label options"
-              : "خيارات بدون علامة تجارية",
-          ],
-          cta: language === "en" ? "Get Studio" : "احصل على الاستوديو",
-          popular: false,
-          paddlePriceId: "pri_01k65kfvna4cjae8a62n1gh7g3",
+          paddlePriceId: "pri_01k6jr3a6b9k0wpspyb4ntcd73", // Replace with your actual yearly price ID
         },
       ],
       lifetime: [
         {
-          name: t.pricing.creatorLifetime,
-          price: "499",
-          period: language === "en" ? "once" : "مرة واحدة",
-          description: t.pricing.creatorLifetimeDesc,
+          name: language === "en" ? "Lifetime License" : "ترخيص مدى الحياة",
+          price: "60",
+          period: language === "en" ? "one-time" : "مرة واحدة",
+          description:
+            language === "en"
+              ? "Pay once, use forever"
+              : "ادفع مرة واحدة، استخدم للأبد",
           features: [
             language === "en"
-              ? "Unlimited AI generations"
-              : "عمليات إنشاء غير محدودة بالذكاء الاصطناعي",
-            language === "en" ? "Unlimited characters" : "شخصيات غير محدودة",
+              ? "Full desktop application access"
+              : "وصول كامل لتطبيق سطح المكتب",
             language === "en"
-              ? "Advanced panel layouts"
-              : "تخطيطات لوحات متقدمة",
-            language === "en" ? "Custom speech bubbles" : "فقاعات كلام مخصصة",
-            language === "en" ? "Chapter management" : "إدارة الفصول",
-            language === "en" ? "Lifetime updates" : "تحديثات مدى الحياة",
-            language === "en" ? "Priority support" : "دعم مميز",
-            language === "en" ? "Commercial license" : "ترخيص تجاري",
+              ? "AI-powered manga creation tools"
+              : "أدوات إنشاء المانجا بالذكاء الاصطناعي",
+            language === "en"
+              ? "Create chapters, scenes & panels"
+              : "إنشاء فصول ومشاهد ولوحات",
+            language === "en"
+              ? "Generate characters & outfits"
+              : "إنشاء شخصيات وملابس",
+            language === "en"
+              ? "Build locations & backgrounds"
+              : "بناء مواقع وخلفيات",
+            language === "en"
+              ? "Webtoon-style layouts"
+              : "تخطيطات بنمط الويبتون",
+            language === "en" ? "Speech bubble dialogs" : "فقاعات حوار",
+            language === "en" ? "Local SQLite storage" : "تخزين SQLite محلي",
+            language === "en"
+              ? "Works with your Gemini API key"
+              : "يعمل مع مفتاح Gemini API الخاص بك",
+            language === "en"
+              ? "All future updates included"
+              : "جميع التحديثات المستقبلية مضمنة",
+            language === "en"
+              ? "One-time payment, no recurring fees"
+              : "دفعة واحدة، بدون رسوم متكررة",
           ],
           cta:
             language === "en"
-              ? "Get Lifetime Access"
-              : "احصل على الوصول مدى الحياة",
+              ? "Get Lifetime License"
+              : "احصل على الترخيص مدى الحياة",
           popular: true,
-          paddlePriceId: "pri_01k65kfvna4cjae8a62n1gh7g3",
+          paddlePriceId: "pri_01k6jr4sdr54taq7ydexyecgn5", // Replace with your actual lifetime price ID
         },
       ],
     };
 
   const downloadLinks = {
     windows:
-      "https://github.com/yourusername/manga-ai-releases/releases/latest/download/MangaAI-Setup.exe",
-    mac: "https://github.com/yourusername/manga-ai-releases/releases/latest/download/MangaAI.dmg",
+      "https://github.com/ahmedNabilskil-dev/MangaAI-Desktop-Release/releases/download/v.01/MangaAI-1.0.0-win.exe",
+    mac: "https://github.com/ahmedNabilskil-dev/MangaAI-Desktop-Release/releases/download/v.01/MangaAI-1.0.0-win.exe",
   };
 
   return (
@@ -728,19 +651,13 @@ const LandingPage: React.FC = () => {
                 <span>{t.nav.pricing}</span>
               </a>
               <a
-                href="#testimonials"
-                className="hover:text-purple-400 transition-all duration-300 flex items-center space-x-1"
-              >
-                <span>{t.nav.reviews}</span>
-              </a>
-              <a
                 href="#download"
                 className="hover:text-purple-400 transition-all duration-300 flex items-center space-x-1"
               >
                 <span>{t.nav.download}</span>
               </a>
               <a
-                href="https://facebook.com/mangaaiapp"
+                href="https://www.facebook.com/profile.php?id=61577187896774"
                 className="hover:text-blue-400 transition-all duration-300 flex items-center space-x-1"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -755,99 +672,108 @@ const LandingPage: React.FC = () => {
                 isRTL ? "space-x-reverse" : ""
               }`}
             >
-              <button className="bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-2 rounded-full font-semibold hover:shadow-lg hover:shadow-purple-500/25 transition-all duration-300 transform hover:scale-105 flex items-center space-x-2">
+              <a
+                href={downloadLinks.windows}
+                className="bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-2 rounded-full font-semibold hover:shadow-lg hover:shadow-purple-500/25 transition-all duration-300 transform hover:scale-105 flex items-center space-x-2"
+              >
                 <Download className="w-4 h-4" />
                 <span>{t.nav.download}</span>
-              </button>
+              </a>
             </div>
           </div>
         </div>
       </nav>
 
       {/* Hero Section */}
-      <section className="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <div className="mb-8">
-              <span className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-purple-500/20 to-pink-500/20 border border-purple-500/30 rounded-full text-sm font-medium backdrop-blur-sm">
-                <Bot className={`w-4 h-4 ${isRTL ? "ml-2" : "mr-2"}`} />
+      <section className="relative pt-20 pb-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center">
+            {/* Compact Badge */}
+            <div className="inline-flex items-center space-x-2 bg-purple-500/10 border border-purple-500/20 rounded-full px-4 py-2 mb-6 backdrop-blur-sm">
+              <Sparkles className="w-4 h-4 text-purple-400" />
+              <span className="text-sm font-semibold text-purple-300">
                 {t.hero.tagline}
-                <ChevronRight
-                  className={`w-4 h-4 ${isRTL ? "mr-2" : "ml-2"}`}
-                />
               </span>
             </div>
 
-            <h1 className="text-6xl md:text-8xl lg:text-9xl font-bold mb-8 leading-none">
-              <span className="bg-gradient-to-r from-white via-purple-200 to-white bg-clip-text text-transparent block">
-                {t.hero.title1}
+            {/* Compact Hero Title */}
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
+              <span className="bg-gradient-to-r from-white via-purple-200 to-white bg-clip-text text-transparent">
+                {t.hero.title1}{" "}
               </span>
-              <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent block">
+              <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent">
                 {t.hero.title2}
               </span>
-              <span className="bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent block text-5xl md:text-6xl lg:text-7xl">
+              <br />
+              <span className="bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent text-3xl sm:text-4xl md:text-5xl">
                 {t.hero.title3}
               </span>
             </h1>
 
-            <p className="text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto mb-12 leading-relaxed">
+            <p className="text-base md:text-lg text-gray-300 max-w-3xl mx-auto mb-8 leading-relaxed">
               {t.hero.description}
             </p>
 
-            <div className="flex flex-col lg:flex-row gap-6 justify-center items-center mb-16">
-              <div className="flex flex-col sm:flex-row gap-4">
-                <a
-                  href={downloadLinks.windows}
-                  className="group bg-gradient-to-r from-purple-500 to-pink-500 px-8 py-4 rounded-2xl font-bold text-lg hover:shadow-xl hover:shadow-purple-500/25 transition-all duration-300 transform hover:scale-105 flex items-center space-x-3"
-                >
-                  <Monitor className="w-6 h-6" />
-                  <span>{t.hero.windows}</span>
-                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                </a>
+            {/* Compact CTA Buttons */}
+            <div className="flex flex-col sm:flex-row gap-3 justify-center items-center mb-10">
+              <a
+                href={downloadLinks.windows}
+                className="group bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-3 rounded-xl font-bold hover:shadow-lg hover:shadow-purple-500/25 transition-all duration-300 transform hover:scale-105 flex items-center space-x-2"
+              >
+                <Monitor className="w-5 h-5" />
+                <span>{t.hero.windows}</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </a>
 
-                <a
-                  href={downloadLinks.mac}
-                  className="group bg-gradient-to-r from-slate-600 to-slate-700 px-8 py-4 rounded-2xl font-bold text-lg hover:shadow-xl hover:shadow-slate-500/25 transition-all duration-300 transform hover:scale-105 flex items-center space-x-3"
-                >
-                  <Apple className="w-6 h-6" />
-                  <span>{t.hero.macos}</span>
-                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                </a>
-              </div>
+              <a
+                href={downloadLinks.mac}
+                className="group bg-gradient-to-r from-slate-600 to-slate-700 px-6 py-3 rounded-xl font-bold hover:shadow-lg hover:shadow-slate-500/25 transition-all duration-300 transform hover:scale-105 flex items-center space-x-2"
+              >
+                <Apple className="w-5 h-5" />
+                <span>{t.hero.macos}</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </a>
 
-              <button className="group border-2 border-white/20 hover:border-purple-400 px-8 py-4 rounded-2xl font-bold text-lg backdrop-blur-sm hover:bg-white/5 transition-all duration-300 flex items-center space-x-2">
-                <Play className="w-6 h-6" />
+              <button className="group border-2 border-white/20 hover:border-purple-400 px-6 py-3 rounded-xl font-semibold backdrop-blur-sm hover:bg-white/5 transition-all duration-300 flex items-center space-x-2">
+                <Play className="w-5 h-5" />
                 <span>{t.hero.watchDemo}</span>
               </button>
             </div>
 
-            {/* Enhanced Stats */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-5xl mx-auto">
-              {stats.map((stat, index) => (
-                <div key={index} className="text-center group">
-                  <div
-                    className={`text-4xl font-bold ${stat.color} mb-2 group-hover:scale-110 transition-transform duration-300`}
-                  >
-                    {stat.value}
-                  </div>
-                  <div className="text-gray-400 text-sm">{stat.label}</div>
-                </div>
-              ))}
+            {/* Feature Pills */}
+            <div className="flex flex-wrap justify-center gap-3 max-w-2xl mx-auto">
+              <div className="flex items-center space-x-2 bg-white/5 border border-white/10 rounded-full px-4 py-2 backdrop-blur-sm">
+                <Shield className="w-4 h-4 text-green-400" />
+                <span className="text-sm text-gray-300">100% Private</span>
+              </div>
+              <div className="flex items-center space-x-2 bg-white/5 border border-white/10 rounded-full px-4 py-2 backdrop-blur-sm">
+                <Zap className="w-4 h-4 text-yellow-400" />
+                <span className="text-sm text-gray-300">Lightning Fast</span>
+              </div>
+              <div className="flex items-center space-x-2 bg-white/5 border border-white/10 rounded-full px-4 py-2 backdrop-blur-sm">
+                <Database className="w-4 h-4 text-blue-400" />
+                <span className="text-sm text-gray-300">Local Storage</span>
+              </div>
+              <div className="flex items-center space-x-2 bg-white/5 border border-white/10 rounded-full px-4 py-2 backdrop-blur-sm">
+                <Key className="w-4 h-4 text-purple-400" />
+                <span className="text-sm text-gray-300">Your API Key</span>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Features Section */}
-      <section id="features" className="py-20 px-4 sm:px-6 lg:px-8 relative">
+      <section id="features" className="py-10 px-4 sm:px-6 lg:px-8 relative">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-20">
-            <h2 className="text-5xl md:text-7xl font-bold mb-8 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+            <h2 className="relative inline-block overflow-visible text-5xl md:text-7xl font-bold mb-8 leading-none pb-2 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
               {t.features.title1}
-              <span className="block text-4xl md:text-5xl bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+              <span className="block text-4xl md:text-5xl leading-none pb-1 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
                 {t.features.title2}
               </span>
             </h2>
+
             <p className="text-xl text-gray-300 max-w-3xl mx-auto">
               {t.features.description}
             </p>
@@ -905,204 +831,265 @@ const LandingPage: React.FC = () => {
       <section id="pricing" className="py-20 px-4 sm:px-6 lg:px-8 relative">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+            {/* Badge */}
+            <div className="inline-block mb-6">
+              <span className="bg-purple-500/20 text-purple-300 px-4 py-2 rounded-full text-sm font-semibold border border-purple-500/30">
+                {language === "en" ? "Choose Your Plan" : "اختر خطتك"}
+              </span>
+            </div>
+
+            <h2 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white via-purple-200 to-pink-200 bg-clip-text text-transparent">
               {t.pricing.title}
             </h2>
-            <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
+            <p className="text-xl text-gray-300 mb-12 max-w-3xl mx-auto">
               {t.pricing.description}
             </p>
 
-            {/* Enhanced Tab Navigation */}
-            <div className="flex justify-center mb-12">
-              <div className="bg-white/10 backdrop-blur-xl rounded-2xl p-2 border border-white/20">
+            {/* Tab Navigation */}
+            <div className="flex justify-center mb-16">
+              <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-2 border border-white/10 inline-flex">
                 {(["monthly", "yearly", "lifetime"] as const).map((tab) => (
                   <button
                     key={tab}
                     onClick={() => setActiveTab(tab)}
-                    className={`px-8 py-4 rounded-xl font-semibold transition-all duration-300 ${
+                    className={`relative px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
                       activeTab === tab
-                        ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg"
-                        : "text-gray-300 hover:text-white hover:bg-white/5"
+                        ? "text-white"
+                        : "text-gray-400 hover:text-white"
                     }`}
                   >
-                    <span>{t.pricing[tab]}</span>
-                    {tab === "yearly" && (
-                      <span
-                        className={`${
-                          isRTL ? "mr-2" : "ml-2"
-                        } bg-green-500 text-white px-2 py-1 rounded-lg text-xs`}
-                      >
-                        {t.pricing.save}
-                      </span>
+                    {activeTab === tab && (
+                      <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl"></div>
                     )}
-                    {tab === "lifetime" && (
-                      <span
-                        className={`${
-                          isRTL ? "mr-2" : "ml-2"
-                        } bg-yellow-500 text-black px-2 py-1 rounded-lg text-xs`}
-                      >
-                        {t.pricing.bestDeal}
-                      </span>
-                    )}
+                    <span className="relative flex items-center gap-2">
+                      {t.pricing[tab]}
+                      {tab === "yearly" && (
+                        <span className="bg-green-500 text-white px-2 py-0.5 rounded-md text-xs font-bold">
+                          {t.pricing.save}
+                        </span>
+                      )}
+                      {tab === "lifetime" && (
+                        <span className="bg-gradient-to-r from-yellow-400 to-orange-400 text-black px-2 py-0.5 rounded-md text-xs font-bold">
+                          {t.pricing.bestDeal}
+                        </span>
+                      )}
+                    </span>
                   </button>
                 ))}
               </div>
             </div>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          {/* Pricing Cards */}
+          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto mb-16">
             {pricingPlans[activeTab].map((plan, index) => (
               <div
                 key={index}
-                className={`relative bg-gradient-to-b from-white/5 to-white/[0.02] backdrop-blur-xl border rounded-3xl p-8 transition-all duration-500 transform hover:-translate-y-2 ${
-                  plan.popular
-                    ? "border-purple-500 shadow-2xl shadow-purple-500/25 scale-105 lg:scale-110"
-                    : "border-white/10 hover:border-purple-500/50 hover:shadow-xl hover:shadow-purple-500/10"
+                className={`relative group ${
+                  plan.popular ? "md:scale-110 z-10" : ""
                 }`}
               >
+                {/* Popular Badge */}
                 {plan.popular && (
-                  <div className="absolute -top-6 left-1/2 transform -translate-x-1/2">
-                    <span className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-3 rounded-2xl text-sm font-bold shadow-lg">
+                  <div className="absolute -top-5 left-1/2 transform -translate-x-1/2 z-20">
+                    <div className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-2 rounded-full text-sm font-bold shadow-lg flex items-center gap-2">
+                      <Star className="w-4 h-4 fill-current" />
                       {language === "en" ? "Most Popular" : "الأكثر شعبية"}
-                    </span>
+                    </div>
                   </div>
                 )}
 
-                <div className="text-center mb-8">
-                  <h3 className="text-2xl font-bold mb-2">{plan.name}</h3>
-                  <p className="text-gray-400 mb-6">{plan.description}</p>
-
-                  <div className="mb-4">
-                    {plan.originalPrice && (
-                      <span className="text-2xl text-gray-500 line-through mr-2">
-                        ${plan.originalPrice}
-                      </span>
-                    )}
-                    <span className="text-5xl font-bold bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent">
-                      ${plan.price}
-                    </span>
-                    <span className="text-gray-400">/{plan.period}</span>
-                  </div>
-                </div>
-
-                <ul className="space-y-4 mb-8">
-                  {plan.features.map((feature, featureIndex) => (
-                    <li
-                      key={featureIndex}
-                      className="flex items-start space-x-3"
-                    >
-                      <Check className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" />
-                      <span className="text-gray-300 text-sm">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-
-                <button
-                  onClick={() =>
-                    plan.paddlePriceId
-                      ? openPaddleCheckout(plan.paddlePriceId)
-                      : null
-                  }
-                  disabled={isLoading}
-                  className={`w-full py-4 rounded-2xl font-bold text-lg transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed ${
+                {/* Card */}
+                <div
+                  className={`relative h-full bg-gradient-to-b backdrop-blur-xl border rounded-3xl p-8 transition-all duration-500 ${
                     plan.popular
-                      ? "bg-gradient-to-r from-purple-500 to-pink-500 hover:shadow-xl hover:shadow-purple-500/25 text-white"
-                      : "border-2 border-white/20 hover:border-purple-400 hover:bg-white/5 text-white"
+                      ? "from-white/10 to-white/5 border-purple-500 shadow-2xl shadow-purple-500/25"
+                      : "from-white/5 to-white/[0.02] border-white/10 hover:border-purple-500/50 hover:shadow-xl hover:shadow-purple-500/10"
                   }`}
                 >
-                  {isLoading
-                    ? language === "en"
-                      ? "Loading..."
-                      : "جاري التحميل..."
-                    : plan.cta}
-                </button>
+                  {/* Price Section */}
+                  <div className="text-center mb-8">
+                    <h3 className="text-2xl font-bold mb-2 text-white">
+                      {plan.name}
+                    </h3>
+                    <p className="text-gray-400 text-sm mb-6 min-h-[40px]">
+                      {plan.description}
+                    </p>
+
+                    <div className="mb-2">
+                      {plan.originalPrice && (
+                        <div className="text-gray-500 line-through text-lg mb-1">
+                          ${plan.originalPrice}
+                        </div>
+                      )}
+                      <div className="flex items-baseline justify-center gap-1">
+                        <span className="text-6xl font-bold bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent">
+                          ${plan.price}
+                        </span>
+                        <span className="text-gray-400 text-lg">
+                          /{plan.period}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Trial Badge for subscriptions */}
+                    {activeTab !== "lifetime" && (
+                      <div className="mt-3">
+                        <span className="inline-flex items-center gap-1 bg-green-500/20 text-green-400 px-3 py-1 rounded-full text-xs font-semibold border border-green-500/30">
+                          <Check className="w-3 h-3" />
+                          {t.pricing.trial}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Features List */}
+                  <ul className="space-y-4 mb-8">
+                    {plan.features.map((feature, featureIndex) => (
+                      <li key={featureIndex} className="flex items-start gap-3">
+                        <div className="flex-shrink-0 w-5 h-5 rounded-full bg-green-500/20 flex items-center justify-center mt-0.5">
+                          <Check className="w-3 h-3 text-green-400" />
+                        </div>
+                        <span className="text-gray-300 text-sm leading-relaxed">
+                          {feature}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  {/* CTA Button */}
+                  <button
+                    onClick={() =>
+                      plan.paddlePriceId
+                        ? openPaddleCheckout(plan.paddlePriceId)
+                        : null
+                    }
+                    disabled={isLoading}
+                    className={`w-full py-4 rounded-2xl font-bold text-lg transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 ${
+                      plan.popular
+                        ? "bg-gradient-to-r from-purple-500 to-pink-500 hover:shadow-xl hover:shadow-purple-500/50 text-white"
+                        : "border-2 border-white/20 hover:border-purple-400 hover:bg-white/10 text-white"
+                    }`}
+                  >
+                    {isLoading ? (
+                      <span>
+                        {language === "en" ? "Loading..." : "جاري التحميل..."}
+                      </span>
+                    ) : (
+                      <>
+                        <span>{plan.cta}</span>
+                        <ArrowRight className="w-5 h-5" />
+                      </>
+                    )}
+                  </button>
+                </div>
               </div>
             ))}
           </div>
 
-          <div className="text-center mt-12">
-            <p
-              className={`text-gray-400 flex items-center justify-center space-x-4 flex-wrap ${
-                isRTL ? "space-x-reverse" : ""
-              }`}
-            >
-              <span className="flex items-center space-x-2">
-                <Shield className="w-4 h-4" />
-                <span>{t.pricing.guarantee}</span>
-              </span>
-              <span>•</span>
-              <span>{t.pricing.cancel}</span>
-              <span>•</span>
-              <span>{t.pricing.noFees}</span>
-            </p>
+          {/* Trust Badges */}
+          <div className="max-w-4xl mx-auto">
+            <div className="bg-gradient-to-r from-white/5 to-white/[0.02] backdrop-blur-xl border border-white/10 rounded-2xl p-8">
+              <div
+                className={`flex flex-wrap items-center justify-center gap-6 text-sm ${
+                  isRTL ? "space-x-reverse" : ""
+                }`}
+              >
+                <div className="flex items-center gap-2 text-gray-300">
+                  <Shield className="w-5 h-5 text-green-400" />
+                  <span>{t.pricing.guarantee}</span>
+                </div>
+                <div className="hidden sm:block w-1 h-1 rounded-full bg-gray-600"></div>
+                <div className="flex items-center gap-2 text-gray-300">
+                  <Check className="w-5 h-5 text-purple-400" />
+                  <span>{t.pricing.cancel}</span>
+                </div>
+                <div className="hidden sm:block w-1 h-1 rounded-full bg-gray-600"></div>
+                <div className="flex items-center gap-2 text-gray-300">
+                  <Key className="w-5 h-5 text-pink-400" />
+                  <span>{t.pricing.noFees}</span>
+                </div>
+                <div className="hidden sm:block w-1 h-1 rounded-full bg-gray-600"></div>
+                <div className="flex items-center gap-2 text-gray-300">
+                  <Sparkles className="w-5 h-5 text-yellow-400" />
+                  <span>
+                    {language === "en"
+                      ? "You control API costs"
+                      : "أنت تتحكم في تكاليف API"}
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Testimonials Section */}
-      <section
-        id="testimonials"
-        className="py-20 px-4 sm:px-6 lg:px-8 relative"
-      >
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-              {t.testimonials.title}
-            </h2>
-            <p className="text-xl text-gray-300">
-              {t.testimonials.description}
-            </p>
-          </div>
+      {testimonials.length > 0 && (
+        <section
+          id="testimonials"
+          className="py-10 px-4 sm:px-6 lg:px-8 relative"
+        >
+          <div className="max-w-7xl mx-auto">
+            <div className="text-center mb-16">
+              <h2 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+                {t.testimonials.title}
+              </h2>
+              <p className="text-xl text-gray-300">
+                {t.testimonials.description}
+              </p>
+            </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {testimonials.map((testimonial, index) => (
-              <div
-                key={index}
-                className="bg-gradient-to-b from-white/10 to-white/[0.02] backdrop-blur-xl border border-white/10 rounded-3xl p-8 hover:bg-gradient-to-b hover:from-white/15 hover:to-white/5 hover:border-purple-500/50 transition-all duration-500 transform hover:-translate-y-2 hover:shadow-2xl hover:shadow-purple-500/10"
-              >
-                <div className="flex mb-6">
-                  {[...Array(testimonial.rating)].map((_, i) => (
-                    <Star
-                      key={i}
-                      className="w-5 h-5 text-yellow-400 fill-current"
-                    />
-                  ))}
-                </div>
-
-                <p className="text-gray-200 mb-8 leading-relaxed italic text-lg">
-                  "{testimonial.content}"
-                </p>
-
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {testimonials.map((testimonial, index) => (
                 <div
-                  className={`flex items-center space-x-4 ${
-                    isRTL ? "flex-row-reverse space-x-reverse" : ""
-                  }`}
+                  key={index}
+                  className="bg-gradient-to-b from-white/10 to-white/[0.02] backdrop-blur-xl border border-white/10 rounded-3xl p-8 hover:bg-gradient-to-b hover:from-white/15 hover:to-white/5 hover:border-purple-500/50 transition-all duration-500 transform hover:-translate-y-2 hover:shadow-2xl hover:shadow-purple-500/10"
                 >
-                  <div className="relative">
-                    <img
-                      src={testimonial.avatar}
-                      alt={testimonial.name}
-                      className="w-14 h-14 rounded-2xl object-cover border-2 border-white/20"
-                    />
-                    <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-400 rounded-full border-2 border-slate-900"></div>
+                  <div className="flex mb-6">
+                    {[...Array(testimonial.rating)].map((_, i) => (
+                      <Star
+                        key={i}
+                        className="w-5 h-5 text-yellow-400 fill-current"
+                      />
+                    ))}
                   </div>
-                  <div className={isRTL ? "text-right" : "text-left"}>
-                    <div className="font-bold text-white text-lg">
-                      {testimonial.name}
+
+                  <p className="text-gray-200 mb-8 leading-relaxed italic text-lg">
+                    "{testimonial.content}"
+                  </p>
+
+                  <div
+                    className={`flex items-center space-x-4 ${
+                      isRTL ? "flex-row-reverse space-x-reverse" : ""
+                    }`}
+                  >
+                    <div className="relative">
+                      <img
+                        src={testimonial.avatar}
+                        alt={testimonial.name}
+                        className="w-14 h-14 rounded-2xl object-cover border-2 border-white/20"
+                      />
+                      <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-400 rounded-full border-2 border-slate-900"></div>
                     </div>
-                    <div className="text-purple-400 text-sm font-medium">
-                      {testimonial.role}
+                    <div className={isRTL ? "text-right" : "text-left"}>
+                      <div className="font-bold text-white text-lg">
+                        {testimonial.name}
+                      </div>
+                      <div className="text-purple-400 text-sm font-medium">
+                        {testimonial.role}
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* Download Section */}
-      <section id="download" className="py-20 px-4 sm:px-6 lg:px-8 relative">
+      <section id="download" className="py-10 px-4 sm:px-6 lg:px-8 relative">
         <div className="max-w-6xl mx-auto">
           <div className="bg-gradient-to-r from-purple-500/10 via-pink-500/10 to-cyan-500/10 border border-purple-500/20 rounded-3xl p-12 backdrop-blur-xl text-center">
             <div className="mb-8">
@@ -1112,7 +1099,7 @@ const LandingPage: React.FC = () => {
                   {t.download.available}
                 </span>
               </div>
-              <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+              <h2 className="inline-block overflow-visible leading-none pb-2 text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
                 {t.download.title}
               </h2>
               <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
@@ -1191,10 +1178,10 @@ const LandingPage: React.FC = () => {
       </section>
 
       {/* How It Works Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 relative">
+      <section className="py-10 px-4 sm:px-6 lg:px-8 relative">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+            <h2 className="inline-block overflow-visible leading-none pb-2 text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
               {t.howItWorks.title}
             </h2>
             <p className="text-xl text-gray-300 max-w-3xl mx-auto">
@@ -1257,58 +1244,8 @@ const LandingPage: React.FC = () => {
         </div>
       </section>
 
-      {/* Final CTA Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 relative">
-        <div className="max-w-4xl mx-auto text-center">
-          <div className="bg-gradient-to-r from-purple-500/20 via-pink-500/20 to-cyan-500/20 border border-purple-500/30 rounded-3xl p-12 backdrop-blur-xl">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-              {t.cta.title}
-            </h2>
-            <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
-              {t.cta.description}
-            </p>
-
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
-              <a
-                href={downloadLinks.windows}
-                className="bg-gradient-to-r from-purple-500 to-pink-500 px-8 py-4 rounded-2xl font-bold text-lg hover:shadow-xl hover:shadow-purple-500/25 transition-all duration-300 transform hover:scale-105 flex items-center justify-center space-x-3"
-              >
-                <Download className="w-6 h-6" />
-                <span>{t.cta.download}</span>
-              </a>
-
-              <a
-                href="#pricing"
-                className="border-2 border-white/20 hover:border-purple-400 px-8 py-4 rounded-2xl font-bold text-lg backdrop-blur-sm hover:bg-white/5 transition-all duration-300"
-              >
-                {t.cta.viewPricing}
-              </a>
-            </div>
-
-            <div
-              className={`flex items-center justify-center space-x-6 text-sm text-gray-400 ${
-                isRTL ? "space-x-reverse" : ""
-              }`}
-            >
-              <span className="flex items-center space-x-2">
-                <Check className="w-4 h-4 text-green-400" />
-                <span>{t.cta.freeTrial}</span>
-              </span>
-              <span className="flex items-center space-x-2">
-                <Check className="w-4 h-4 text-green-400" />
-                <span>{t.cta.noCard}</span>
-              </span>
-              <span className="flex items-center space-x-2">
-                <Check className="w-4 h-4 text-green-400" />
-                <span>{t.cta.cancelAnytime}</span>
-              </span>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Footer */}
-      <footer className="py-12 px-4 sm:px-6 lg:px-8 border-t border-white/10 bg-black/20">
+      <footer className="py-10 px-4 sm:px-6 lg:px-8 border-t border-white/10 bg-black/20">
         <div className="max-w-7xl mx-auto">
           <div
             className={`grid md:grid-cols-4 gap-8 mb-8 ${
@@ -1394,7 +1331,7 @@ const LandingPage: React.FC = () => {
                 </li>
                 <li>
                   <a
-                    href="https://facebook.com/mangaaiapp"
+                    href="https://www.facebook.com/profile.php?id=61577187896774"
                     className="hover:text-white transition-colors flex items-center space-x-2"
                     target="_blank"
                     rel="noopener noreferrer"
@@ -1417,15 +1354,24 @@ const LandingPage: React.FC = () => {
                 isRTL ? "space-x-reverse" : ""
               }`}
             >
-              <a href="#" className="hover:text-white transition-colors">
+              <Link
+                to="/privacy-policy"
+                className="hover:text-white transition-colors"
+              >
                 {language === "en" ? "Privacy Policy" : "سياسة الخصوصية"}
-              </a>
-              <a href="#" className="hover:text-white transition-colors">
+              </Link>
+              <Link
+                to="/terms-of-service"
+                className="hover:text-white transition-colors"
+              >
                 {language === "en" ? "Terms of Service" : "شروط الخدمة"}
-              </a>
-              <a href="#" className="hover:text-white transition-colors">
+              </Link>
+              <Link
+                to="/license"
+                className="hover:text-white transition-colors"
+              >
                 {language === "en" ? "License" : "الترخيص"}
-              </a>
+              </Link>
             </div>
 
             <div
@@ -1434,7 +1380,7 @@ const LandingPage: React.FC = () => {
               }`}
             >
               <a
-                href="https://facebook.com/mangaaiapp"
+                href="https://www.facebook.com/profile.php?id=61577187896774"
                 className="p-2 hover:bg-blue-600/20 rounded-lg transition-all duration-300 group"
                 target="_blank"
                 rel="noopener noreferrer"
